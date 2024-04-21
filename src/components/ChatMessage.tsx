@@ -5,7 +5,7 @@ import 'dayjs/plugin/isToday';
 import 'dayjs/plugin/isYesterday';
 import MessageParser from "../helper/MessageParser";
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { TextMessage, deleteChatMessage } from "../store/features/users/chatMessageSlice";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useDispatch, useSelector } from "react-redux";
@@ -36,7 +36,7 @@ const parseMessage = (message: string | undefined) => {
         return messageParser;
     }
 
-    console.log(message);
+    console.log("msg", message);
 
     return message;
 }
@@ -71,10 +71,29 @@ const ChatMessage: React.FC<ChatMessageProps> = React.memo(({ message, messageId
     const { t } = useTranslation();
 
     useEffect(() => {
+        const videoRepeatLength = 10; // seconds
         console.log('Adding event listeners');
         // yes, I know this is a bad practice, but I'm not sure how to do it better
-        document.querySelectorAll('.user-video-element').forEach(e => {
+        document.querySelectorAll<HTMLVideoElement>('.user-video-element').forEach(e => {
             console.log(e);
+            e.preload = "metadata";
+            e.addEventListener('loadedmetadata', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.target) {
+                    const videoElement = e.target as HTMLVideoElement;
+                    console.log(videoElement.duration);
+                    const videoLength = videoRepeatLength * Math.ceil(videoElement.duration / videoRepeatLength);
+
+                    videoElement.loop = true;
+                    videoElement.play();
+                    setTimeout(() => {
+                        videoElement.pause();
+                        videoElement.loop = false;
+                    }, videoLength * 1000);
+                }
+            });
+
             e.addEventListener('mouseenter', (e) => {
                 e.preventDefault();
                 e.stopPropagation();

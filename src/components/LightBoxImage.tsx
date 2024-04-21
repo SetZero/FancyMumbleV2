@@ -47,7 +47,7 @@ function LightBoxImage(props: LightBoxImageProps) {
                 additionalStyles = { width: '100%', minHeight: minHeight, height: '100%' };
             }
 
-            setBackgroundImage({ backgroundImage: `url(${props.src})`, backgroundColor: '#000000', backgroundSize: 'cover', ...additionalStyles });
+            setBackgroundImage({ backgroundImage: `url(${props.src.replace(/(\r\n|\n|\r|\s)/gm, "")})`, backgroundColor: '#000000', backgroundSize: 'cover', ...additionalStyles });
         }
     }, [lightboxRef.current?.offsetWidth, lightboxRef.current?.offsetHeight, imageHeight, imageWidth]);
 
