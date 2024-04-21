@@ -1,5 +1,5 @@
 import { Alert, Backdrop, Box, Card, CardContent, CircularProgress, Container, Divider, Grid, TextField, Typography } from "@mui/material";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import UploadBox from "../UploadBox";
 import React, { useState } from 'react';
 import DefaultColorPicker from "../ColorPicker";

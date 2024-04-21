@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import '../App.css';
 import './styles/Login.css';
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Box, IconButton, LinearProgress, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Typography, Menu } from '@mui/material'
-import { invoke } from '@tauri-apps/api/tauri'
+import { invoke } from '@tauri-apps/api/core'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';

@@ -5,7 +5,7 @@ import { addChatMessage } from '../store/features/users/chatMessageSlice';
 import { Dispatch } from 'react';
 import { AnyAction } from '@reduxjs/toolkit';
 import { ServerSync, updateServerInfo } from '../store/features/server/serverSlice';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { useNavigate } from 'react-router-dom';
 
 enum MessageTypes {

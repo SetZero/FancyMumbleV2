@@ -1,7 +1,7 @@
 import { UpdateableUserState, UsersState } from "../store/features/users/userSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../store/store";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 
 export function updateUserValue(currentUser: UsersState | undefined, update: (currentUser: UsersState, operator: UpdateableUserState) => void) {
     if (currentUser) {

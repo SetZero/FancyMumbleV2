@@ -84,8 +84,9 @@ async fn download_file(
 }
 
 fn main() -> io::Result<()> {
-    let mumble_proto = Path::new("src/proto/Mumble.proto");
-    let mumble_udp_proto = Path::new("src/proto/MumbleUDP.proto");
+    let mumble_proto = Path::new("../out/proto/Mumble.proto");
+    let mumble_udp_proto = Path::new("../out/proto/MumbleUDP.proto");
+    let fancy_proto = Path::new("src/proto/Fancy.proto");
     let patch_file = Path::new("src/proto/Mumble.proto.patch");
 
     let mumble_proto_bytes = read_file_as_bytes(mumble_proto).unwrap_or_default();
@@ -116,9 +117,13 @@ fn main() -> io::Result<()> {
         });
     }
 
-    prost_build::compile_protos(&["src/proto/Mumble.proto"], &["src/"])?;
-    prost_build::compile_protos(&["src/proto/MumbleUDP.proto"], &["src/"])?;
-    prost_build::compile_protos(&["src/proto/Fancy.proto"], &["src/"])?;
+    let mumble_proto_str = mumble_proto.to_str().expect("Failed to convert path to string");
+    let mumble_udp_proto_str = mumble_udp_proto.to_str().expect("Failed to convert path to string");
+    let fancy_proto_str = fancy_proto.to_str().expect("Failed to convert path to string");
+
+    prost_build::compile_protos(&[mumble_proto_str], &["../out"])?;
+    prost_build::compile_protos(&[mumble_udp_proto_str], &["../out"])?;
+    prost_build::compile_protos(&[fancy_proto_str], &["src/"])?;
     tauri_build::build();
 
     Ok(())

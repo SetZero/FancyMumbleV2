@@ -109,3 +109,5 @@ src-tauri/data
 src-tauri/src/proto/Mumble.proto
 src-tauri/src/proto/MumbleUDP.proto
 src-tauri/gen
+
+out/

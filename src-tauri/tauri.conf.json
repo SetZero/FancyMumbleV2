@@ -2,119 +2,62 @@
   "build": {
     "beforeBuildCommand": "yarn run build",
     "beforeDevCommand": "yarn run dev",
-    "devPath": "http://localhost:5173",
-    "distDir": "../dist"
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "Fancy Mumble",
-    "version": "0.2.2"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "globalShortcut": {
-        "all": true
-      },
-      "path": {
-        "all": true
-      },
-      "shell": {
-        "all": false,
-        "execute": false,
-        "sidecar": false,
-        "open": true
-      },
-      "window": {
-        "all": false,
-        "center": false,
-        "close": true,
-        "create": false,
-        "hide": true,
-        "maximize": true,
-        "minimize": true,
-        "print": false,
-        "requestUserAttention": false,
-        "setAlwaysOnTop": false,
-        "setCursorGrab": false,
-        "setCursorIcon": false,
-        "setCursorPosition": false,
-        "setCursorVisible": false,
-        "setDecorations": false,
-        "setFocus": false,
-        "setFullscreen": false,
-        "setIcon": false,
-        "setIgnoreCursorEvents": false,
-        "setMaxSize": false,
-        "setMinSize": false,
-        "setPosition": false,
-        "setResizable": false,
-        "setSize": false,
-        "setSkipTaskbar": false,
-        "setTitle": false,
-        "show": false,
-        "startDragging": true,
-        "unmaximize": true,
-        "unminimize": true
-      },
-      "dialog": {
-        "all": false,
-        "open": true
-      }
-    },
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "com.fancy-mumble",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
-    },
+  "productName": "Fancy Mumble",
+  "version": "0.2.2",
+  "identifier": "com.fancy-mumble",
+  "app": {
+    "macOSPrivateApi": false,
     "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": true,
-      "endpoints": [
-        "https://github.com/Fancy-Mumble/FancyMumbleV2/releases/latest/download/latest.json"
-      ],
-      "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhGNTM4MDI3NDkwN0I1NQpSV1JWZTVCMEFqajFDQTdndmVuRDFmY1NNKy8vM1VWM3NESGNXSHM3MHFtZU45a212Qysvd0x0ZQo=",
-      "windows": {
-        "installMode": "passive"
+      "assetProtocol": {
+        "enable": false,
+        "scope": []
+      },
+      "capabilities": [],
+      "dangerousDisableAssetCspModification": false,
+      "freezePrototype": false,
+      "pattern": {
+        "use": "brownfield"
       }
     },
     "windows": [
       {
-        "fullscreen": false,
-        "resizable": true,
         "title": "Fancy Mumble",
         "decorations": false
       }
-    ]
-  }
+    ],
+    "withGlobalTauri": false
+  },
+  "bundle": {
+    "active": true,
+    "category": "DeveloperTool",
+    "copyright": "",
+    "externalBin": [],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "resources": [],
+    "shortDescription": "",
+    "targets": "all",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
+    }
+  },
+  "plugins": {}
 }

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { debounce, set } from 'lodash';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from "@tauri-apps/api/core";
 import { use } from 'i18next';
 import { Gif } from '@mui/icons-material';
 import ContainedBackdrop from './utils/ContainedBackdrop';

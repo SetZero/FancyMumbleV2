@@ -8,7 +8,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import './styles/CurrentUserInfo.css'
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { UpdateableUserState, UsersState } from "../store/features/users/userSlice";
 import "./styles/common.css"
 import { useCallback, useEffect, useMemo } from "react";

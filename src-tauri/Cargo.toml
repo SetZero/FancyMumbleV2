@@ -2,19 +2,19 @@
 name = "app"
 version = "0.2.2"
 description = "Fancy Mumble"
-authors = ["you"]
+authors = ["SetZero"]
 license = "MIT"
 repository = ""
 default-run = "app"
 edition = "2021"
-rust-version = "1.59"
+rust-version = "1.77"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.4.0", features = [] }
+tauri-build = { version = "2.0.0-beta", features = [] }
 prost-build = "0.12.3"
-reqwest = { version = "0.11", features = ["cookies"] }
+reqwest = { version = "0.12", features = ["cookies"] }
 sha2 = "0.10.6"
 tokio = { version = "1", features = ["full"] }
 patch = "0.7.0"
@@ -22,7 +22,7 @@ patch = "0.7.0"
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.5.4", features = [ "path-all", "dialog-open", "global-shortcut-all", "shell-open", "updater", "window-close", "window-hide", "window-maximize", "window-minimize", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
+tauri = { version = "2.0.0-beta", features = [] }
 futures = "0.3.4"
 tokio = { version = "1", features = ["full"] }
 tokio-native-tls = "0.3.1"
@@ -31,23 +31,26 @@ byteorder = "1.4.3"
 async-trait = "0.1.68"
 tracing = "0.1"
 tracing-subscriber = {version = "0.3", features = ["env-filter"] }
-base64 = "0.21.0"
+base64 = "0.22.0"
 openssl = "0.10.52"
 os_info = "3"
-opus = "0.3.0"
 rodio = "0.17.1"
-image = "0.24.6"
 directories = "5.0.1"
 num-traits = "0.2"
-brotli = "3.3.4"
+brotli = "5.0.0"
 webbrowser = "0.8.10"
-reqwest = "0.11"
-scraper = "0.18.1"
-tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+reqwest = "0.12"
+scraper = "0.19"
+tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
 symphonia = "0.5.3"
 mime_guess = "2.0.4"
 uuid = "1.7.0"
+tauri-plugin-dialog = "2.0.0-beta.4"
+image = {version = "0.25.1", features = ["gif", "png"], default-features = false } # zune jpeg is broken in android builds
+audiopus_sys = { git = "F:/Dokumente/projekte/rust/audiopus_sys", branch = "0.0.6" }
+opus =  "0.3.0"
+oboe = { version = "0.6.1", features = [ "java-interface", "shared-stdcxx" ] } # Android
 
 [dev-dependencies]
 tempfile = "3.5.0"
@@ -63,6 +66,7 @@ default = ["custom-protocol"]
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
 
+
 [profile.release]
 debug = 1
 
@@ -73,3 +77,6 @@ codegen-units = 1
 
 [rust]
 debuginfo-level = 1
+
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]

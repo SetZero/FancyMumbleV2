@@ -13,10 +13,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import AdvancedSettings from "../components/settings/AdvancedSettings";
-import Language from "@mui/icons-material/Language";
-import { Lan } from "@mui/icons-material";
 import LanguageSettings from "../components/settings/LanguageSettings";
 import LanguageIcon from '@mui/icons-material/Language';
+import AppearanceSettings from "../components/settings/AppearanceSettings";
 import { useTranslation } from "react-i18next";
 
 enum SettingsTab {
@@ -142,6 +141,7 @@ function Settings() {
                     {selectedIndex === SettingsTab.Privacy && <div>{t('Privacy', { ns: "privacy" })}</div>}
                     {selectedIndex === SettingsTab.Advanced && <AdvancedSettings />}
                     {selectedIndex === SettingsTab.Language && <LanguageSettings />}
+                    {selectedIndex === SettingsTab.Appearance && <AppearanceSettings />}
                 </Box>
             </Box>
         </Box>

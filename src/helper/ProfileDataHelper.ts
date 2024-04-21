@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { UserCommentData } from "../store/features/users/userSlice";
 
 const TOKEN = ">>>FM;";

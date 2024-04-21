@@ -5,12 +5,11 @@ import { getBackgroundFromComment, getProfileImage, getTextFromcomment } from ".
 import SendIcon from '@mui/icons-material/Send';
 import "./styles/UserInfo.css";
 import dayjs from "dayjs";
-import MessageParser from "../helper/MessageParser";
 import { ChatMessageHandler } from "../helper/ChatMessage";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import "./styles/common.css"
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { useTranslation } from "react-i18next";
 
 interface UserInfoProps {

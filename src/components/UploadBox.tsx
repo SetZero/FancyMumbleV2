@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { open } from '@tauri-apps/api/dialog';
+import { open } from '@tauri-apps/plugin-dialog';
 import { listen } from '@tauri-apps/api/event';
 import './styles/UploadBox.css'
 import { useEffect, useState } from "react";

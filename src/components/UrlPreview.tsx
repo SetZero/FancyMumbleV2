@@ -2,7 +2,7 @@ import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia,
 import "./styles/UserInfo.css";
 import "./styles/common.css"
 import { useEffect, useMemo, useState } from "react";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core"
 import { openInBrowser } from "../helper/BrowserUtils";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";

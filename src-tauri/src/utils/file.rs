@@ -78,8 +78,10 @@ pub fn read_image_as_thumbnail(filename: &str, max_size: u32) -> AnyError<ImageI
 
         let image = image.into_bytes();
 
-        image::codecs::jpeg::JpegEncoder::new(buf_writer)
-            .encode(&image, width, height, color_type)?;
+        // TODO: Fix JPEG encoding for android
+        //image::codecs::jpeg::JpegEncoder::new(buf_writer)
+        //    .encode(&image, width, height, color_type.into())?;
+        drop(buf_writer);
     }
 
     Ok(ImageInfo {

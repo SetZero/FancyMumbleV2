@@ -4,7 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import InfoIcon from '@mui/icons-material/Info';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CastIcon from '@mui/icons-material/Cast';
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { RootState } from "../store/store";

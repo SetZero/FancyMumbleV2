@@ -3,6 +3,7 @@ use std::{
     io::{Seek, SeekFrom, Write},
 };
 
+use tauri::Manager;
 use tracing::{info, trace};
 
 use crate::{
@@ -12,10 +13,9 @@ use crate::{
 
 const SERVER_SETTINS_FILE: &str = "server.json";
 
-pub fn get_settings_file(file_name: &str) -> Result<std::fs::File, String> {
-    let project_dirs = get_project_dirs().ok_or("Unable to load project dir")?;
-    let data_dir = project_dirs.config_dir();
-    std::fs::create_dir_all(data_dir).map_err(|e| format!("{e:?}"))?;
+pub fn get_settings_file(file_name: &str, app: &tauri::AppHandle) -> Result<std::fs::File, String> {
+    let data_dir = app.path().app_config_dir().map_err(|e| format!("{e:?}"))?;
+    std::fs::create_dir_all(&data_dir).map_err(|e| format!("{e:?}"))?;
     let settings_file = std::fs::OpenOptions::new()
         .read(true)
         .write(true)
@@ -32,9 +32,10 @@ pub fn save_server(
     server_port: u16,
     username: &str,
     identity: Option<String>,
+    app_handle: tauri::AppHandle
 ) -> Result<(), String> {
     info!("Saving server: {server_host}:{server_port}");
-    let mut server_file = get_settings_file(SERVER_SETTINS_FILE)?;
+    let mut server_file = get_settings_file(SERVER_SETTINS_FILE, &app_handle)?;
 
     // read the json content using serde and append the new server
     let mut server_list =
@@ -73,14 +74,13 @@ pub fn save_server(
 }
 
 #[tauri::command]
-pub fn get_server_list() -> Result<Vec<Server>, String> {
+pub fn get_server_list(app_handle: tauri::AppHandle) -> Result<Vec<Server>, String> {
     info!("Getting server list");
-    let project_dirs = get_project_dirs().ok_or("Unable to load project dir")?;
 
-    let data_dir = project_dirs.config_dir();
+    let data_dir = app_handle.path().app_config_dir().map_err(|e| format!("{e:?}"))?;
 
     // create config dir if it doesn't exist
-    std::fs::create_dir_all(data_dir).map_err(|e| format!("{e:?}"))?;
+    std::fs::create_dir_all(&data_dir).map_err(|e| format!("{e:?}"))?;
 
     // open server.json or create it if it doesn't exist
     let server_file = std::fs::OpenOptions::new()
@@ -100,14 +100,11 @@ pub fn get_server_list() -> Result<Vec<Server>, String> {
 }
 
 #[tauri::command]
-pub fn get_identity_certs() -> Result<Vec<String>, String> {
-    let project_dirs = get_project_dirs()
-        .ok_or_else(|| CertificateError::new("Unable to load project dir"))
-        .map_err(|e| format!("{e:?}"))?;
-    let data_dir = project_dirs.data_dir();
+pub fn get_identity_certs(app_handle: tauri::AppHandle) -> Result<Vec<String>, String> {
+    let data_dir = app_handle.path().app_data_dir().map_err(|e| format!("{e:?}"))?;
 
     if !data_dir.exists() {
-        std::fs::create_dir_all(data_dir).map_err(|e| format!("{e:?}"))?;
+        std::fs::create_dir_all(&data_dir).map_err(|e| format!("{e:?}"))?;
     }
 
     let mut certs = Vec::new();

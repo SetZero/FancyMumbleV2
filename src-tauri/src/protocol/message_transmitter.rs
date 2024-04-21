@@ -12,13 +12,13 @@ use tracing::{debug, trace};
 
 pub struct MessageTransmitter {
     recv_channel: Receiver<String>,
-    window: tauri::Window,
+    window: tauri::WebviewWindow,
     transmitter_thread: Option<JoinHandle<()>>,
     running: Arc<RwLock<bool>>,
 }
 
 impl MessageTransmitter {
-    pub fn new(recv_channel: Receiver<String>, window: tauri::Window) -> Self {
+    pub fn new(recv_channel: Receiver<String>, window: tauri::WebviewWindow) -> Self {
         Self {
             recv_channel,
             window,
@@ -47,7 +47,7 @@ impl MessageTransmitter {
                 select! {
                     Ok(result) = channel.recv() => {
                         trace!("backend_update received");
-                        _ = window_clone.emit_all("backend_update", result);
+                        _ = window_clone.emit("backend_update", result);
                     }
                     _ = interval.tick() => {}
                 }

@@ -7,6 +7,7 @@ use std::{
     thread,
     time::Duration,
 };
+use tauri::Manager;
 
 use tokio::sync::broadcast::{self, Receiver};
 use tracing::{error, info, trace, warn};

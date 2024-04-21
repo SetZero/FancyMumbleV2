@@ -3,7 +3,7 @@ import { ChannelState } from "../store/features/users/channelSlice";
 import { UsersState } from "../store/features/users/userSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';

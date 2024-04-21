@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { updateApiKey, FrontendSettings, updateFrontendSettings, clearFrontendSettings } from '../../store/features/users/frontendSettings';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from "@tauri-apps/api/core";
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { t } from 'i18next';
 import { persistFrontendSettings, persistentStorage } from '../../store/persistance/persist';

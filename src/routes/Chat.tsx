@@ -14,7 +14,7 @@ import QuillChatInput from '../components/QuillChatInput';
 import { persistentStorage } from '../store/persistance/persist';
 import { FrontendSettings, updateFrontendSettings } from '../store/features/users/frontendSettings';
 import { updateAudioSettings } from '../store/features/users/audioSettings';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from "@tauri-apps/api/core";
 import i18n from '../i18n/i18n';
 import { updateCurrentUserListeningInfo } from '../store/features/users/userSlice';
 

@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import './styles/ChannelSearch.css';
 import Fuse from 'fuse.js';
 import { useTranslation } from "react-i18next";

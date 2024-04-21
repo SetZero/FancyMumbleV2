@@ -1,5 +1,5 @@
 import { Box, Button, Collapse, Container, FormControl, FormControlLabel, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Select, Slider, Switch, Typography, RadioGroup, Radio, Paper, InputBase, Divider } from "@mui/material";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import LoopIcon from '@mui/icons-material/Loop';
 import { useEffect, useState } from "react";
 import KeyboardIcon from '@mui/icons-material/Keyboard';

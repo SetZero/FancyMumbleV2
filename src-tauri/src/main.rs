@@ -14,6 +14,7 @@ mod utils;
 #[cfg(test)]
 mod tests;
 
+use core::panic;
 use std::{collections::HashMap, sync::Arc};
 
 use commands::{web_cmd::CrawlerState, ConnectionState};
@@ -27,8 +28,8 @@ use tracing_subscriber::{
 };
 
 use crate::commands::{
-    change_user_state, close_app, connect_to_server, crop_and_store_image, disable_audio_info,
-    enable_audio_info, get_audio_devices, like_message, logout, send_message,
+    change_user_state, close_app, connect_to_server, crop_and_store_image, dev_tools,
+    disable_audio_info, enable_audio_info, get_audio_devices, like_message, logout, send_message,
     set_audio_input_setting, set_audio_output_setting, set_audio_user_state, set_user_image,
     settings_cmd::{get_identity_certs, get_server_list, save_server},
     web_cmd::{
@@ -65,7 +66,7 @@ async fn main() {
             app.manage(ConnectionState {
                 connection: Mutex::new(None),
                 window: Arc::new(Mutex::new(
-                    app.get_window("main").expect("window not found"),
+                    app.get_webview_window("main").expect("window not found"),
                 )),
                 package_info: Mutex::new(app.package_info().clone()),
                 message_handler: Mutex::new(HashMap::new()),
@@ -103,7 +104,8 @@ async fn main() {
             get_tenor_trending_results,
             convert_url_to_base64,
             set_audio_user_state,
-            close_app
+            close_app,
+            dev_tools
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { TextMessage, addChatMessage, deleteAllMessages } from "../store/features/users/chatMessageSlice";
 import { UsersState } from "../store/features/users/userSlice";
 import MessageParser from "./MessageParser";
@@ -42,6 +42,7 @@ export class ChatMessageHandler {
 
     public sendChatMessage(chatMessage: string, userInfo: UsersState | undefined) {
         if (chatMessage.length === 0) return;
+        console.log("sending message", chatMessage);
 
         let message = new MessageParser(chatMessage)
             .parseLinks()
