@@ -21,6 +21,7 @@ pub struct CertificateBuilder {
     load_or_generate_new: bool,
     store_to_project_dir: bool,
     identity: Option<String>,
+    data_dir: PathBuf,
 }
 
 impl CertificateBuilder {
@@ -29,7 +30,13 @@ impl CertificateBuilder {
             load_or_generate_new: false,
             store_to_project_dir: false,
             identity: identity.clone(),
+            data_dir: PathBuf::new(),
         }
+    }
+
+    pub fn cert_path(mut self, path: PathBuf) -> Self {
+        self.data_dir = path;
+        self
     }
 
     pub const fn load_or_generate_new(mut self, load_or_generate_new: bool) -> Self {
@@ -43,20 +50,16 @@ impl CertificateBuilder {
     }
 
     pub fn build(self) -> AnyError<CertificateStore> {
-        let project_dirs = get_project_dirs()
-            .ok_or_else(|| CertificateError::new("Unable to load project dir"))?;
-        let data_dir = project_dirs.data_dir();
-
-        if !data_dir.exists() {
-            std::fs::create_dir_all(data_dir)?;
+        if !self.data_dir.exists() {
+            std::fs::create_dir_all(&self.data_dir)?;
         }
 
-        let certificate_path = data_dir.join(
+        let certificate_path = self.data_dir.join(
             self.identity
                 .as_ref()
                 .map_or("certificate.pem".to_string(), |v| format!("cert_{v}.pem")),
         );
-        let private_key_path = data_dir.join(
+        let private_key_path = self.data_dir.join(
             self.identity
                 .as_ref()
                 .map_or("private_key.pem".to_string(), |v| {
@@ -70,7 +73,7 @@ impl CertificateBuilder {
             if let Some(certificate_store) =
                 Self::read_certificates(&certificate_path, &private_key_path)
             {
-                trace!("Certificate loaded from project dir: {data_dir:?}");
+                trace!("Certificate loaded from project dir: {:?}", self.data_dir);
                 return Ok(certificate_store);
             }
 

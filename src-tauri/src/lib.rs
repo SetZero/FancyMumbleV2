@@ -19,6 +19,10 @@ use crate::commands::{
     },
     zip_cmd::{convert_to_base64, unzip_data_from_utf8, zip_data_to_utf8},
 };
+use commands::{web_cmd::CrawlerState, ConnectionState};
+use std::{collections::HashMap, sync::Arc};
+use tauri::Manager;
+use tokio::sync::Mutex;
 
 #[cfg(mobile)]
 mod mobile;
@@ -50,7 +54,21 @@ impl AppBuilder {
         let setup = self.setup;
         tauri::Builder::default()
             .plugin(tauri_plugin_store::Builder::default().build())
+            .plugin(tauri_plugin_os::init())
             .setup(move |app| {
+                app.manage(ConnectionState {
+                    connection: Mutex::new(None),
+                    window: Arc::new(Mutex::new(
+                        app.get_webview_window("main").expect("window not found"),
+                    )),
+                    package_info: Mutex::new(app.package_info().clone()),
+                    message_handler: Mutex::new(HashMap::new()),
+                    device_manager: Mutex::new(None),
+                    settings_channel: Mutex::new(None),
+                });
+                app.manage(CrawlerState {
+                    crawler: Mutex::new(None),
+                });
                 if let Some(setup) = setup {
                     (setup)(app)?;
                 }

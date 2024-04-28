@@ -68,6 +68,7 @@ pub async fn connect_to_server(
     username: String,
     identity: Option<String>,
     state: State<'_, ConnectionState>,
+    app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
     info!("Connecting to server: {server_host}:{server_port}, username: {username}, identity: {identity:?}");
 
@@ -89,6 +90,7 @@ pub async fn connect_to_server(
         identity,
         app_info,
         settings_channel,
+        app_handle
     ));
     if let Err(e) = connection.connect().await {
         return Err(format!("{e:?}"));
@@ -207,9 +209,12 @@ pub async fn crop_and_store_image(
     zoom: f32,
     crop: Coordinates,
     rotation: i32,
-    app_handle: tauri::AppHandle
+    app_handle: tauri::AppHandle,
 ) -> Result<String, String> {
-    let data_dir = app_handle.path().app_data_dir().map_err(|e| format!("{e:?}"))?;
+    let data_dir = app_handle
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("{e:?}"))?;
     let path = Path::new(path);
     let img = image::open(path).map_err(|e| e.to_string())?;
 
@@ -368,7 +373,10 @@ pub fn close_app(app: AppHandle) {
 #[cfg(desktop)]
 #[tauri::command]
 pub fn dev_tools(app: AppHandle) {
-    if let Err(e) = app.get_webview_window("main").map_or_else(|| Err(()), |w|  Ok(w.open_devtools())) {
+    if let Err(e) = app
+        .get_webview_window("main")
+        .map_or_else(|| Err(()), |w| Ok(w.open_devtools()))
+    {
         error!("Failed to toggle dev tools: {:?}", e);
     }
 }

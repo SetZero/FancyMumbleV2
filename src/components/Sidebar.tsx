@@ -14,8 +14,13 @@ import ChannelViewer from "./ChannelViewer";
 import CurrentUserInfo from "./CurrentUserInfo";
 import { LoadingButton } from "@mui/lab";
 import WebRTCPreview from "./WebRTCPreview";
+import CachedIcon from '@mui/icons-material/Cached';
 
-function Sidebar() {
+interface SidebarProps {
+    mobile: boolean;
+}
+
+function Sidebar({ mobile }: SidebarProps) {
     const signalingServerUrl = "http://127.0.0.1:4000";
     const navigate = useNavigate();
     const [screenCasted, setScreenCasted] = useState(false);
@@ -43,7 +48,7 @@ function Sidebar() {
     }, [navigate]);
 
     useEffect(() => {
-        if(!screenCasted) {
+        if (!screenCasted) {
             return;
         }
         const viewer = new WebRTCViewer(signalingServerUrl, currentUserId ?? 0, currentChannelId ?? 0);
@@ -78,7 +83,7 @@ function Sidebar() {
     };
 
     return (
-        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', alignContent: 'center', width: '250px' }} className="sidebar">
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', alignContent: 'center', width: mobile ? '100%' : '250px' }} className="sidebar">
             <Box sx={{ flex: 1, overflowY: 'auto', width: '100%', display: 'flex', flexDirection: 'column' }} >
                 <CurrentUserInfo />
                 <WebRTCPreview webRtcViewer={webRtcViewer} showWebRtcWindow={showWebRtcWindow} />
@@ -94,6 +99,9 @@ function Sidebar() {
                         </Button>
                         <Button onClick={openSettings} color="inherit">
                             <SettingsIcon />
+                        </Button>
+                        <Button onClick={() => window.location.reload()} color="inherit">
+                            <CachedIcon />
                         </Button>
                     </ButtonGroup>
                 </Box>

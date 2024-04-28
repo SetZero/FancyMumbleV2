@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, SwipeableDrawer } from '@mui/material';
 
 import ChatMessageContainer from '../components/ChatMessageContainer';
 
@@ -17,11 +17,14 @@ import { updateAudioSettings } from '../store/features/users/audioSettings';
 import { invoke } from "@tauri-apps/api/core";
 import i18n from '../i18n/i18n';
 import { updateCurrentUserListeningInfo } from '../store/features/users/userSlice';
+import { isMobile } from '../helper/PlatformHelper';
 
 
 function Chat() {
     const [showLog, setShowLog] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [mobile, setMobile] = useState<boolean>(false);
+    const [showSidebar, setShowSidebar] = useState<boolean>(false);
 
     const messageLog = useSelector((state: RootState) => state.reducer.chatMessage);
     const useWYSIWYG = useSelector((state: RootState) => state.reducer.frontendSettings?.advancedSettings?.useWYSIWYG);
@@ -50,7 +53,12 @@ function Chat() {
         console.log("Settings fetched");
     }, [])
 
+    const getOs = useCallback(async () => {
+        setMobile(await isMobile());
+    }, []);
+
     useEffect(() => {
+        getOs();
         fetchSettings().then(() => setLoading(false));
     }, [fetchSettings]);
 
@@ -62,9 +70,38 @@ function Chat() {
         }
     }, [useWYSIWYG]);
 
+    let sidebar = useMemo(() => {
+        if (mobile) {
+            return (<SwipeableDrawer
+                open={showSidebar}
+                onClose={() => setShowSidebar(false)}
+                onOpen={() => setShowSidebar(true)}
+            >
+                <Sidebar mobile={true} />
+            </SwipeableDrawer>)
+        } else {
+            return (<Sidebar mobile={false} />)
+        }
+    }, [mobile]);
+
+    let eventLog = useMemo(() => {
+        if (mobile) {
+            return (<SwipeableDrawer
+                open={showLog}
+                onClose={() => setShowLog(false)}
+                onOpen={() => setShowLog(true)}
+                anchor='bottom'
+            >
+                <EventLog showLog={showLog} mobile={true} />
+            </SwipeableDrawer>)
+        } else {
+            return (<EventLog showLog={showLog} mobile={false} />)
+        }
+    }, [mobile, showLog]);
+
     return (
         <Box sx={{ height: '100%', display: (loading ? 'none' : 'flex'), flexDirection: 'row' }}>
-            <Sidebar />
+            {sidebar}
             <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
                 <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <Box sx={{
@@ -83,7 +120,7 @@ function Chat() {
                     {selectChatInput}
                 </Box>
             </Box>
-            <EventLog showLog={showLog} />
+            {eventLog}
         </Box>
     )
 }

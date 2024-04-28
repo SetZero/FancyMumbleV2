@@ -16,7 +16,7 @@ use base64::Engine;
 use std::collections::HashMap;
 use std::sync::atomic::AtomicBool;
 use std::sync::Arc;
-use tauri::PackageInfo;
+use tauri::{Manager, PackageInfo};
 use threads::{InputThread, MainThread, OutputThread, PingThread};
 use tokio::net::TcpStream;
 use tokio::sync::broadcast::{self, Receiver, Sender};
@@ -63,6 +63,8 @@ pub struct Connection {
     package_info: PackageInfo,
     stream_reader: Arc<Mutex<Option<StreamReader>>>,
     settings_channel: Receiver<GlobalSettings>,
+
+    app_handle: tauri::AppHandle,
 }
 
 impl Connection {
@@ -73,6 +75,7 @@ impl Connection {
         identity: Option<String>,
         package_info: PackageInfo,
         settings_channel: Receiver<GlobalSettings>,
+        app_handle: tauri::AppHandle,
     ) -> Self {
         let (tx_in, _): (Sender<Vec<u8>>, Receiver<Vec<u8>>) = broadcast::channel(QUEUE_SIZE);
         let (tx_out, _): (Sender<Vec<u8>>, Receiver<Vec<u8>>) = broadcast::channel(QUEUE_SIZE);
@@ -97,6 +100,7 @@ impl Connection {
             message_channels: MessageChannels { message_channel },
             stream_reader: Arc::new(Mutex::new(None)),
             settings_channel,
+            app_handle,
         }
     }
 
@@ -109,6 +113,7 @@ impl Connection {
         );
 
         let mut certificate_store = CertificateBuilder::try_from(&self.server_data.identity)
+            .cert_path(self.app_handle.path().data_dir()?)
             .load_or_generate_new(true)
             .store_to_project_dir(true)
             .build()?;

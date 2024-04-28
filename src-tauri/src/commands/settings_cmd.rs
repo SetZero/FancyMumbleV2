@@ -32,7 +32,7 @@ pub fn save_server(
     server_port: u16,
     username: &str,
     identity: Option<String>,
-    app_handle: tauri::AppHandle
+    app_handle: tauri::AppHandle,
 ) -> Result<(), String> {
     info!("Saving server: {server_host}:{server_port}");
     let mut server_file = get_settings_file(SERVER_SETTINS_FILE, &app_handle)?;
@@ -77,7 +77,10 @@ pub fn save_server(
 pub fn get_server_list(app_handle: tauri::AppHandle) -> Result<Vec<Server>, String> {
     info!("Getting server list");
 
-    let data_dir = app_handle.path().app_config_dir().map_err(|e| format!("{e:?}"))?;
+    let data_dir = app_handle
+        .path()
+        .app_config_dir()
+        .map_err(|e| format!("{e:?}"))?;
 
     // create config dir if it doesn't exist
     std::fs::create_dir_all(&data_dir).map_err(|e| format!("{e:?}"))?;
@@ -101,7 +104,10 @@ pub fn get_server_list(app_handle: tauri::AppHandle) -> Result<Vec<Server>, Stri
 
 #[tauri::command]
 pub fn get_identity_certs(app_handle: tauri::AppHandle) -> Result<Vec<String>, String> {
-    let data_dir = app_handle.path().app_data_dir().map_err(|e| format!("{e:?}"))?;
+    let data_dir = app_handle
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("{e:?}"))?;
 
     if !data_dir.exists() {
         std::fs::create_dir_all(&data_dir).map_err(|e| format!("{e:?}"))?;

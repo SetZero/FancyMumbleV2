@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../App.css';
 import './styles/Login.css';
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Box, IconButton, LinearProgress, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Typography, Menu } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Box, IconButton, LinearProgress, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Typography, Menu } from '@mui/material';
 import { invoke } from '@tauri-apps/api/core'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -116,7 +116,7 @@ function Login() {
 
     return (
         <Box sx={{ height: '100%', display: 'flex', maxHeight: '100%', overflow: 'hidden' }}>
-            <Box className='login' sx={{ height: '100%', maxWidth: '40%', minWidth: '500px', marginLeft: 2 }}>
+            <Box className='login' sx={{ height: '100%', maxWidth: '40%', minWidth: '500px', marginLeft: 2, '@media (max-width: 600px)': { maxWidth: '100%', minWidth: '100px' } }}>
                 <Box sx={{ flexGrow: 1, alignContent: "center", justifyContent: "center", display: "flex", flexDirection: "column" }}>
                     <Typography
                         align='center'

@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next';
 
 interface EventLogProps {
     showLog: boolean;
+    mobile: boolean;
 }
 
-const EventLog: React.FC<EventLogProps> = React.memo(({ showLog }) => {
+const EventLog: React.FC<EventLogProps> = React.memo(({ showLog, mobile }) => {
     const { t, i18n } = useTranslation();
     const eventLog = useSelector((state: RootState) => state.eventLog);
     const eventLogRef = useRef<HTMLDivElement | null>(null);
@@ -28,7 +29,7 @@ const EventLog: React.FC<EventLogProps> = React.memo(({ showLog }) => {
 
     return (
         <Box sx={{
-            maxWidth: '300px',
+            maxWidth: mobile ? '100%' : '300px',
             display: 'flex',
             flexDirection: 'column',
             flex: 1,

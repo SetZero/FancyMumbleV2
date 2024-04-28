@@ -117,9 +117,15 @@ fn main() -> io::Result<()> {
         });
     }
 
-    let mumble_proto_str = mumble_proto.to_str().expect("Failed to convert path to string");
-    let mumble_udp_proto_str = mumble_udp_proto.to_str().expect("Failed to convert path to string");
-    let fancy_proto_str = fancy_proto.to_str().expect("Failed to convert path to string");
+    let mumble_proto_str = mumble_proto
+        .to_str()
+        .expect("Failed to convert path to string");
+    let mumble_udp_proto_str = mumble_udp_proto
+        .to_str()
+        .expect("Failed to convert path to string");
+    let fancy_proto_str = fancy_proto
+        .to_str()
+        .expect("Failed to convert path to string");
 
     prost_build::compile_protos(&[mumble_proto_str], &["../out"])?;
     prost_build::compile_protos(&[mumble_udp_proto_str], &["../out"])?;
