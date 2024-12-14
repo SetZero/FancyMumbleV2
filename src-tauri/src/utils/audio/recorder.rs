@@ -7,7 +7,7 @@ use std::{
     thread,
     time::Duration,
 };
-use tauri::Manager;
+use tauri::Emitter;
 
 use tokio::sync::broadcast::{self, Receiver};
 use tracing::{error, info, trace, warn};
@@ -124,7 +124,8 @@ impl Recorder {
 
                 if let Some(audio_preview) = audio_preview.as_mut() {
                     let _ = audio_preview.window.try_lock().map(|window| {
-                        let _ = window.emit("audio_preview", max_amplitude);
+                        let emit = window.emit("audio_preview", max_amplitude);
+                        let _ = emit;
                     });
                 }
 

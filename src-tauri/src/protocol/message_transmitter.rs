@@ -4,7 +4,7 @@ use crate::connection::threads::DEADMAN_INTERVAL;
 use crate::connection::traits::{HandleMessage, Shutdown};
 use crate::errors::AnyError;
 use async_trait::async_trait;
-use tauri::Manager;
+use tauri::{Emitter, Manager};
 use tokio::task::JoinHandle;
 use tokio::time;
 use tokio::{select, sync::broadcast::Receiver};

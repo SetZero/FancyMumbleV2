@@ -2,7 +2,7 @@ import { Box, Button, Divider, Fade, IconButton, InputBase, Paper, Popper, Toolt
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GifIcon from '@mui/icons-material/Gif';
-import { useCallback, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useMemo, useRef, useState } from "react";
 import { ChatMessageHandler } from "../helper/ChatMessage";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -95,6 +95,26 @@ function ChatInput() {
         });
     }
 
+    function handleInput(e: FormEvent<HTMLDivElement>): void {
+        const dataTransfer = e.nativeEvent.dataTransfer;
+        if (dataTransfer && dataTransfer.files.length > 0) {
+            const file = dataTransfer.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                if (reader.result && (reader.result as string).length > 0x7fffff) {
+                    chatMessageHandler.sendCustomChatMessage(t("Image too large", { size: formatBytes((reader.result as string).length), maximum: formatBytes(0x7fffff) }), currentUser);
+                    return;
+                }
+                const legacyImageSize = 600; // Adapt image size for legacy clients
+                let img = `<img src="${reader.result}" width="${legacyImageSize}" />`;
+                chatMessageHandler.sendCustomChatMessage(img, currentUser);
+            };
+        }
+    }
+
+    const placeholderText = currentChannel?.length ?? 0 > 100 ? `${currentChannel?.slice(0, 97) ?? ""}...` : currentChannel;
+
     return (
         <Box m={2} sx={{ display: 'flex' }}>
             <Paper
@@ -108,10 +128,11 @@ function ChatInput() {
                 </Tooltip>
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
-                    placeholder={t("Send Message to Channel", { ns: "user_interaction", channel: currentChannel })}
+                    placeholder={t("Send Message to Channel", { ns: "user_interaction", channel: placeholderText })}
                     inputProps={{ 'aria-label': 'Send Message to ' + currentChannel }}
                     onChange={e => setChatMessage(e.target.value)}
                     onKeyDown={keyDownHandler}
+                    onInput={(e) => handleInput(e)}
                     value={chatMessage}
                     onPaste={pasteEvent}
                     multiline

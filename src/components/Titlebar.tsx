@@ -1,4 +1,4 @@
-import { getCurrent } from "@tauri-apps/api/webviewWindow";
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import CloseIcon from '@mui/icons-material/Close';
 import MinimizeIcon from '@mui/icons-material/Minimize';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
@@ -9,6 +9,7 @@ function Titlebar() {
     const closeApp = () => {
         invoke('close_app');
     }
+    const appWindow = getCurrentWindow();
 
     return (
         <Paper data-tauri-drag-region sx={{
@@ -18,10 +19,10 @@ function Titlebar() {
             zIndex: 9999,
             userSelect: 'none',
         }}>
-            <IconButton size="small" onClick={(e) => getCurrent().window.minimize()} className="titlebar-button" >
+            <IconButton size="small" onClick={(e) => appWindow.minimize()} className="titlebar-button" >
                 <MinimizeIcon sx={{ fontSize: 18 }} />
             </IconButton >
-            <IconButton size="small" onClick={(e) => getCurrent().window.toggleMaximize()} className="titlebar-button">
+            <IconButton size="small" onClick={(e) => appWindow.toggleMaximize()} className="titlebar-button">
                 <FilterNoneIcon sx={{ fontSize: 18 }} />
             </IconButton >
             <IconButton size="small" onClick={(e) => closeApp()} className="titlebar-button" color="error">

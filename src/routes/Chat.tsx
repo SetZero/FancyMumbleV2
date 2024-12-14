@@ -1,4 +1,4 @@
-import { Box, SwipeableDrawer } from '@mui/material';
+import { Box, Drawer, SwipeableDrawer } from '@mui/material';
 
 import ChatMessageContainer from '../components/ChatMessageContainer';
 
@@ -11,8 +11,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import ChatInfoBar from '../components/ChatInfoBar';
 import EventLog from '../components/EventLog';
 import QuillChatInput from '../components/QuillChatInput';
-import { persistentStorage } from '../store/persistance/persist';
-import { FrontendSettings, updateFrontendSettings } from '../store/features/users/frontendSettings';
+import { persistFrontendSettings, persistentStorage } from '../store/persistance/persist';
+import { FrontendSettings, updateFrontendSettings, updateUIState } from '../store/features/users/frontendSettings';
 import { updateAudioSettings } from '../store/features/users/audioSettings';
 import { invoke } from "@tauri-apps/api/core";
 import i18n from '../i18n/i18n';
@@ -21,10 +21,12 @@ import { isMobile } from '../helper/PlatformHelper';
 
 
 function Chat() {
-    const [showLog, setShowLog] = useState(false);
     const [loading, setLoading] = useState(false);
     const [mobile, setMobile] = useState<boolean>(false);
     const [showSidebar, setShowSidebar] = useState<boolean>(false);
+
+    const frontendSettings = useSelector((state: RootState) => state.reducer.frontendSettings);
+    const showLog = frontendSettings.ui_state.show_sidebar;
 
     const messageLog = useSelector((state: RootState) => state.reducer.chatMessage);
     const useWYSIWYG = useSelector((state: RootState) => state.reducer.frontendSettings?.advancedSettings?.useWYSIWYG);
@@ -54,7 +56,7 @@ function Chat() {
     }, [])
 
     const getOs = useCallback(async () => {
-        setMobile(await isMobile());
+        setMobile(isMobile());
     }, []);
 
     useEffect(() => {
@@ -70,6 +72,13 @@ function Chat() {
         }
     }, [useWYSIWYG]);
 
+    function toggleSidebar(): void {
+        let newSidebarState = !showLog;
+        let newState = { ...frontendSettings.ui_state, show_sidebar: newSidebarState };
+        dispatch(updateUIState(newState));
+        persistFrontendSettings({ ...frontendSettings, ui_state: newState });
+    }
+
     let sidebar = useMemo(() => {
         if (mobile) {
             return (<SwipeableDrawer
@@ -82,18 +91,17 @@ function Chat() {
         } else {
             return (<Sidebar mobile={false} />)
         }
-    }, [mobile]);
+    }, [mobile, showSidebar]);
 
     let eventLog = useMemo(() => {
         if (mobile) {
-            return (<SwipeableDrawer
+            return (<Drawer
                 open={showLog}
-                onClose={() => setShowLog(false)}
-                onOpen={() => setShowLog(true)}
-                anchor='bottom'
+                onClose={() => toggleSidebar()}
+                anchor='right'
             >
                 <EventLog showLog={showLog} mobile={true} />
-            </SwipeableDrawer>)
+            </Drawer>)
         } else {
             return (<EventLog showLog={showLog} mobile={false} />)
         }
@@ -115,7 +123,7 @@ function Chat() {
                         left: 0,
                         zIndex: -1
                     }}></Box>
-                    <ChatInfoBar onShowLog={setShowLog} />
+                    <ChatInfoBar />
                     <ChatMessageContainer messages={messageLog}></ChatMessageContainer>
                     {selectChatInput}
                 </Box>

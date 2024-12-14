@@ -4,13 +4,25 @@ import './styles/Profile.css'
 import { useTranslation } from "react-i18next";
 import UploadBox from "../UploadBox";
 import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+import React from "react";
 
+enum ImageType {
+    Profile = 'profile',
+    Background = 'background'
+}
 
 function AppearanceSettings() {
     const dispatch = useDispatch();
     const [t] = useTranslation();
 
     let [loading, setLoading] = useState(false);
+    const [uploadBox, setUploadBox] = React.useState(false);
+    const [uploadBoxPath, setUploadBoxPath] = React.useState("");
+    const [uploadBoxBase64, setUploadBoxBase64] = React.useState("");
+    const [uploadBoxType, setUploadBoxType] = React.useState(ImageType.Profile);
+    const [aspect, setAspect] = React.useState(1);
+    const [shape, setShape] = React.useState<"rect" | "round">("rect");
 
     function displayLoadingText(text: string) {
         if (loading) {
@@ -18,6 +30,17 @@ function AppearanceSettings() {
         } else {
             return (<Typography>{text}</Typography>)
         }
+    }
+
+    function showUploadBox(path: string, type: ImageType, aspect?: number, shape?: "rect" | "round") {
+        invoke('convert_to_base64', { path: path }).then(base64 => {
+            setUploadBox(true);
+            setUploadBoxBase64(base64 as string);
+            setUploadBoxPath(path);
+            setUploadBoxType(type);
+            setAspect(aspect ?? 1);
+            setShape(shape ?? "rect");
+        })
     }
 
     return (

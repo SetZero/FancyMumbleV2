@@ -11,10 +11,9 @@ import { updateUIState } from '../store/features/users/frontendSettings';
 import { persistFrontendSettings } from '../store/persistance/persist';
 
 interface ChatInfoBarProps {
-    onShowLog: (showLog: boolean) => void;
 }
 
-const ChatInfoBar: React.FC<ChatInfoBarProps> = React.memo(({ onShowLog }) => {
+const ChatInfoBar: React.FC<ChatInfoBarProps> = React.memo(({ }) => {
     const dispatch = useDispatch();
     const frontendSettings = useSelector((state: RootState) => state.reducer.frontendSettings);
     const showSidebar = frontendSettings.ui_state.show_sidebar;
@@ -28,9 +27,6 @@ const ChatInfoBar: React.FC<ChatInfoBarProps> = React.memo(({ onShowLog }) => {
         return (<KeyboardDoubleArrowRightIcon sx={{ fontSize: 20 }} />);
     }, [showSidebar]);
 
-    useEffect(() => {
-        onShowLog(showSidebar);
-    }, [showSidebar, onShowLog]);
 
     function toggleSidebar(): void {
         console.log("old front end: ", frontendSettings)

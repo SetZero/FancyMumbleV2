@@ -1,18 +1,18 @@
 [package]
-name = "app"
+name = "fancy_mumble"
 version = "0.2.2"
 description = "Fancy Mumble"
 authors = ["SetZero"]
 license = "MIT"
 repository = ""
-default-run = "app"
+default-run = "fancy_mumble"
 edition = "2021"
 rust-version = "1.77"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-beta", features = [] }
+tauri-build = { version = "2.0.0-rc.0", features = [] }
 prost-build = "0.12.3"
 reqwest = { version = "0.12", features = ["cookies"] }
 sha2 = "0.10.6"
@@ -22,7 +22,7 @@ patch = "0.7.0"
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-beta", features = [] }
+tauri = { version = "^2.1.1", features = [] }
 futures = "0.3.4"
 tokio = { version = "1", features = ["full"] }
 tokio-native-tls = "0.3.1"
@@ -40,15 +40,16 @@ brotli = "5.0.0"
 webbrowser = "0.8.10"
 reqwest = "0.12"
 scraper = "0.19"
-tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" }
+tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" , version = "2.0.0" }
+tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v2" , version = "2.0.0" }
 symphonia = "0.5.3"
 mime_guess = "2.0.4"
 uuid = "1.7.0"
-tauri-plugin-dialog = "2.0.0-beta.4"
-audiopus_sys = { git = "file:///mnt/f/Dokumente/projekte/rust/audiopus_sys", branch = "0.0.9" }
+tauri-plugin-dialog = "2.0.0-rc.0"
+#audiopus_sys = { git = "F:/Dokumente/projekte/rust/audiopus_sys", branch = "0.0.9" }
+audiopus_sys = { git = "file:///mnt/f/Dokumente/projekte/rust/audiopus_sys", branch = "0.0.11" }
 opus =  "0.3.0"
-tauri-plugin-os = "2.0.0-beta.3"
+tauri-plugin-os = "2.0.0-rc.0"
 
 [dev-dependencies]
 tempfile = "3.5.0"
@@ -56,7 +57,7 @@ mockall = "0.12.1"
 tokio-test = "0.4.2"
 xshell = "0.2.3"
 
-[target.'cfg(all(target_os = "windows", target_os = "linux", target_os = "macos"))'.dependencies]
+[target.'cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))'.dependencies]
 image = "0.25.1"
 openssl = "0.10.52"
 

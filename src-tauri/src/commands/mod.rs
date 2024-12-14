@@ -14,7 +14,7 @@ use crate::{
     errors::string_convertion::ErrorString,
     manager::user::UpdateableUserState,
     protocol::message_transmitter::MessageTransmitter,
-    utils::{audio::device_manager::AudioDeviceManager, constants::get_project_dirs},
+    utils::audio::device_manager::AudioDeviceManager,
 };
 use tauri::{AppHandle, Manager, State};
 use tokio::sync::{
@@ -90,7 +90,7 @@ pub async fn connect_to_server(
         identity,
         app_info,
         settings_channel,
-        app_handle
+        app_handle,
     ));
     if let Err(e) = connection.connect().await {
         return Err(format!("{e:?}"));

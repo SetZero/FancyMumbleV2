@@ -33,11 +33,13 @@ impl MessageRouter {
         sender: MessageChannels,
         server_channel: Sender<Vec<u8>>,
         settings_channel: Receiver<GlobalSettings>,
+        app_handle: tauri::AppHandle,
     ) -> AnyError<Self> {
         Ok(Self {
             user_manager: user::Manager::new(
                 sender.message_channel.clone(),
                 server_channel.clone(),
+                app_handle.clone(),
             ),
             channel_manager: channel::Manager::new(
                 sender.message_channel.clone(),

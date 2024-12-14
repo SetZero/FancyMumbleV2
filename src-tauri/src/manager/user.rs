@@ -14,9 +14,10 @@ use crate::{
         messages::message_builder,
     },
 };
-
+use std::path::PathBuf;
 use super::Update;
 use tokio::sync::broadcast::Sender;
+use tauri::Manager as TauriManager;
 
 #[derive(Debug, Clone, Copy, Serialize, PartialEq)]
 enum HashUserFields {
@@ -103,14 +104,20 @@ pub struct Manager {
     users: HashMap<u32, User>,
     frontend_channel: Sender<String>,
     server_channel: Sender<Vec<u8>>,
+    app_handle: tauri::AppHandle,
 }
 
 impl Manager {
-    pub fn new(send_to: Sender<String>, server_channel: Sender<Vec<u8>>) -> Self {
+    pub fn new(
+        send_to: Sender<String>,
+        server_channel: Sender<Vec<u8>>,
+        app_handle: tauri::AppHandle,
+    ) -> Self {
         Self {
             users: HashMap::new(),
             frontend_channel: send_to,
             server_channel,
+            app_handle,
         }
     }
 
@@ -130,7 +137,7 @@ impl Manager {
 
     fn notify_user_image(&self, session: u32) -> AnyError<()> {
         if let Some(user) = self.users.get(&session) {
-            store_data_in_cache(&user.profile_picture_hash, &user.profile_picture)?;
+            store_data_in_cache(&user.profile_picture_hash, &user.profile_picture, &self.app_handle.path().app_data_dir()?)?;
 
             let base64 = format!(
                 "data:image/png;base64,{}",
@@ -156,7 +163,7 @@ impl Manager {
                 return Ok(());
             }
 
-            store_data_in_cache(&user.comment_hash, user.comment.as_bytes())?;
+            store_data_in_cache(&user.comment_hash, user.comment.as_bytes(), &self.app_handle.path().app_data_dir()?)?;
 
             let user_image = BlobData {
                 user_id: user.id,
@@ -228,8 +235,13 @@ impl Manager {
         let comment_hash = user_info.comment_hash.clone().unwrap_or_default();
         let session = user_info.session();
 
-        let updated_from_cache =
-            update_user_comment_and_pfp_from_cache(&comment_hash, &texture_hash, user_info);
+        let a = self.app_handle.path();
+        let updated_from_cache = update_user_comment_and_pfp_from_cache(
+            &comment_hash,
+            &texture_hash,
+            user_info,
+            &self.app_handle.path().app_cache_dir()?,
+        );
 
         let has_texture = has_texture(user_info)?;
         let has_comment = has_comment(user_info)?;
@@ -334,6 +346,7 @@ fn update_user_comment_and_pfp_from_cache(
     comment_hash: &Vec<u8>,
     texture_hash: &Vec<u8>,
     user_info: &mut mumble::proto::UserState,
+    path: &PathBuf,
 ) -> Vec<HashUserFields> {
     [
         (HashUserFields::Comment, comment_hash),
@@ -341,7 +354,7 @@ fn update_user_comment_and_pfp_from_cache(
     ]
     .iter()
     .filter(|(_, hash)| !hash.is_empty())
-    .map(|(field, hash)| (field, read_data_from_cache(hash)))
+    .map(|(field, hash)| (field, read_data_from_cache(hash, &path)))
     .filter_map(|(field, hash)| hash.ok().map(|d| (field, d)))
     .map(|(field, hash)| match field {
         HashUserFields::Comment => {

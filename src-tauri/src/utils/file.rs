@@ -10,8 +10,7 @@ use tracing::{debug, info};
 
 use crate::errors::application_error::ApplicationError;
 use crate::errors::AnyError;
-
-use super::constants::get_project_dirs;
+use std::path::PathBuf;
 
 pub struct ImageInfo {
     pub data: Vec<u8>,
@@ -78,9 +77,12 @@ pub fn read_image_as_thumbnail(filename: &str, max_size: u32) -> AnyError<ImageI
 
         let image = image.into_bytes();
 
-        // TODO: Fix JPEG encoding for android
-        //image::codecs::jpeg::JpegEncoder::new(buf_writer)
-        //    .encode(&image, width, height, color_type.into())?;
+        #[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
+        {
+            image::codecs::jpeg::JpegEncoder::new(buf_writer)
+                .encode(&image, width, height, color_type.into())?;
+        }
+        #[cfg(target_os = "android")]
         drop(buf_writer);
     }
 
@@ -119,24 +121,22 @@ impl From<image::ImageFormat> for ImageFormat {
     }
 }
 
-fn get_cache_path_from_hash(hash: &[u8]) -> AnyError<std::path::PathBuf> {
-    let project_dir =
-        get_project_dirs().ok_or_else(|| ApplicationError::new("Unable to obtain project dir"))?;
+fn get_cache_path_from_hash(hash: &[u8], path: &PathBuf) -> AnyError<std::path::PathBuf> {
+    let project_dir = path;
     let hash_string = hash.iter().fold(String::new(), |mut output, b| {
         let _ = write!(output, "{b:x}");
         output
     });
 
     let path = project_dir
-        .cache_dir()
         .join("image_cache")
         .join(hash_string);
 
     Ok(path)
 }
 
-pub fn read_data_from_cache(hash: &[u8]) -> AnyError<Option<Vec<u8>>> {
-    let path = get_cache_path_from_hash(hash)?;
+pub fn read_data_from_cache(hash: &[u8], path: &PathBuf) -> AnyError<Option<Vec<u8>>> {
+    let path = get_cache_path_from_hash(hash, &path)?;
     info!("Reading from cache: {:?}", path);
 
     if path.exists() {
@@ -149,7 +149,7 @@ pub fn read_data_from_cache(hash: &[u8]) -> AnyError<Option<Vec<u8>>> {
     }
 }
 
-pub fn store_data_in_cache(hash: &[u8], data: &[u8]) -> AnyError<()> {
+pub fn store_data_in_cache(hash: &[u8], data: &[u8], path: &PathBuf) -> AnyError<()> {
     use std::io::Write;
 
     if hash.is_empty() {
@@ -158,7 +158,7 @@ pub fn store_data_in_cache(hash: &[u8], data: &[u8]) -> AnyError<()> {
         )));
     }
 
-    let path = get_cache_path_from_hash(hash)?;
+    let path = get_cache_path_from_hash(hash, &path)?;
 
     if !path.exists() {
         std::fs::create_dir_all(

@@ -18,8 +18,8 @@ function App() {
   const [platform, setPlatform] = useState<string>("" as string);
 
   const getOs = useCallback(async () => {
-    setMobile(await isMobile());
-    setPlatform(await getPlatform());
+    setMobile(isMobile());
+    setPlatform(getPlatform());
   }, []);
 
   useEffect(() => {

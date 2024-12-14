@@ -4,7 +4,7 @@ use sha2::{Digest, Sha256};
 use std::fs::{self, File};
 use std::io::{self, Write};
 use std::path::Path;
-use std::str;
+use std::{env, str};
 use tokio::runtime::Runtime;
 
 const DOWNLOAD_MUMBLE_PROTO_DIR: &str =

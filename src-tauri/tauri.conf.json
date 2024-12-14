@@ -2,7 +2,7 @@
   "build": {
     "beforeBuildCommand": "yarn run build",
     "beforeDevCommand": "yarn run dev",
-    "devUrl": "http://192.168.178.120:5173",
+    "devUrl": "http://192.168.1.132:5173",
     "frontendDist": "../dist"
   },
   "productName": "Fancy Mumble",

@@ -35,7 +35,7 @@ function UploadBox(props: UploadBoxProps) {
         });
         if (!selected || Array.isArray(selected)) return;
 
-        props.onUpload(selected);
+        props.onUpload(selected.base64Data ?? '');
     }
 
     async function handleDropUpload() {

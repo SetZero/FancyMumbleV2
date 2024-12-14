@@ -15,8 +15,6 @@ use tracing::trace;
 
 use crate::errors::{certificate_error::CertificateError, AnyError};
 
-use super::constants::get_project_dirs;
-
 pub struct CertificateBuilder {
     load_or_generate_new: bool,
     store_to_project_dir: bool,
